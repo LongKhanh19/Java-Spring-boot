@@ -1,0 +1,41 @@
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class AppConfig {
+    @Bean
+    public HelloService helloService() {
+        return new HelloService();
+    }
+
+    @Bean
+    public HelloController helloController() {
+        return new HelloController(helloService());
+    }
+}
+public class HelloService {
+    public String sayHello() {
+        return "Hello, Spring Framework!";
+    }
+}
+public class HelloController {
+    private final HelloService helloService;
+
+    public HelloController(HelloService helloService) {
+        this.helloService = helloService;
+    }
+
+    public void greet() {
+        System.out.println(helloService.sayHello());
+    }
+}
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+public class MainApp {
+    public static void main(String[] args) {
+        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+        HelloController controller = context.getBean(HelloController.class);
+        controller.greet();
+    }
+}
